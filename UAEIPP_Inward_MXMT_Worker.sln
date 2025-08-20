@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UAEIPP_Inward_MXMT_Worker", "UAEIPP_Inward_MXMT_Worker.csproj", "{6FB66CC4-F963-DAF7-722E-ADFCA982CD98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FB66CC4-F963-DAF7-722E-ADFCA982CD98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FB66CC4-F963-DAF7-722E-ADFCA982CD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FB66CC4-F963-DAF7-722E-ADFCA982CD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB66CC4-F963-DAF7-722E-ADFCA982CD98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C628EFDD-A0EC-47BF-9968-A1C2D5DCF7F1}
+	EndGlobalSection
+EndGlobal
