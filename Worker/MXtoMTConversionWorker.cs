@@ -6,7 +6,6 @@ using Raqmiyat.Framework.Domain;
 using Raqmiyat.Framework.Model;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using UAEIPP_Inward_MXMT_Worker.Model;
 
@@ -44,7 +43,7 @@ namespace UAEIPP_Inward_MXMT_Worker
             }
             catch (Exception ex)
             {
-                _logger.Error("MXtoMTConversionWorker", "ExecuteAsync", $"Error occurred in ExecuteAsync(): {ex.Message}");
+                _logger.Error("MXtoMTConversionWorker", "ExecuteAsync", $"Error occurred in ExecuteAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                 await _utils.SaveEmailAsync("MXtoMTConversionWorker", "Inward", "MXtoMTConversionWorker", "ExecuteAsync", "1001", ex.Message, _logger._log);
             }
         }
@@ -87,7 +86,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                                 else
                                 {
                                     var xml = await TransformToMXAsync(dbParamsRoot);
-
+                                    _logger.Info("MXtoMTConversionWorker", "ProcessAsync", $"XML:{xml}");
                                     try
                                     {
                                         if (xml != null)
@@ -132,7 +131,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                                     }
                                     catch (Exception ex)
                                     {
-                                        _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"XML validation failed:{ex.Message}");
+                                        _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"XML validation failed: {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                                         string headerStatus = "ERR";
                                         string PaymentStatus = "25";
                                         await _sqlData.UpdateValidationStatusAsync(dbParams.RefenceNbr!, dbParams.SrlNbr, PaymentStatus, headerStatus, dbParams.Creditor_IBAN!, "", _logger._log);
@@ -143,7 +142,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                             {
                                 paymentDetailsStatus = "10";
                                 paymentHeaderStatus = "IBR";
-                                _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"Error occurred in Foreach-ProcessAsync(): {ex.Message}");
+                                _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"Error occurred in Foreach-ProcessAsync(): {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                                 await _sqlData.UpdateBatchPaymentDetailsAsync(dbParams.RefenceNbr!, dbParams.SrlNbr, paymentDetailsStatus, "", "", paymentHeaderStatus, "", dbParams.EndToEnd_Identification, _logger._log);
                             }
                         }
@@ -154,7 +153,7 @@ namespace UAEIPP_Inward_MXMT_Worker
 
             catch (Exception ex)
             {
-                _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"Error occurred in ProcessAsync(): {ex.Message}");
+                _logger.Error("MXtoMTConversionWorker", "ProcessAsync", $"Error occurred in ProcessAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                 await _utils.SaveEmailAsync("MXtoMTConversionWorker", "Inward", "MXtoMTConversionWorker", "ProcessAsync", "1002", ex.Message, _logger._log);
             }
         }
@@ -185,13 +184,14 @@ namespace UAEIPP_Inward_MXMT_Worker
                     {
                         xml = xml.Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
                         xml = await _utils.GetReplacePacsXml(xml, _logger._log);
+                       _logger.Info("MXtoMTConversionWorker", "TransformToMXAsync", $"TransformToMXAsync xml:{xml}");
                     }
                 }
                 _logger.Info("MXtoMTConversionWorker", "TransformToMXAsync", $"TransformToMXAsync is done.");
             }
             catch (Exception ex)
             {
-                _logger.Error("MXtoMTConversionWorker", "TransformToMXAsync", $"Error occurred in TransformToMXAsync(): {ex.Message}");
+                _logger.Error("MXtoMTConversionWorker", "TransformToMXAsync", $"Error occurred in TransformToMXAsync(): {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                 await _utils.SaveEmailAsync(dbParamsRoot.DBRequestHeader!.Message_Identification!, "Inward", "MXtoMTConversionWorker", "TransformToMXAsync", "1003", ex.Message, _logger._log);
             }
             return xml;
@@ -281,7 +281,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("MXtoMTConversionWorker", "GetApphdr", $"Error occurred in GetApphdr(): {ex.Message}");
+                    _logger.Error("MXtoMTConversionWorker", "GetApphdr", $"Error occurred in GetApphdr():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                     await _utils.SaveEmailAsync(AppHdr.MsgDefIdr!, "Inward", "MXtoMTConversionWorker", "GetApphdr", "1004", ex.Message, _logger._log);
                 }
 
@@ -353,7 +353,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("MXtoMTConversionWorker", "GetGrpHdrAsync", $"Error occurred in GetGrpHdrAsync(): {ex.Message}");
+                    _logger.Error("MXtoMTConversionWorker", "GetGrpHdrAsync", $"Error occurred in GetGrpHdrAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                     await _utils.SaveEmailAsync(grpHdr.MsgId!, "Inward", "MXtoMTConversionWorker", "GetGrpHdrAsync", "1005", ex.Message, _logger._log);
                 }
 
@@ -366,39 +366,58 @@ namespace UAEIPP_Inward_MXMT_Worker
             string msg = string.Empty;
             try
             {
+                _logger.Info("MXtoMTConversionWorker", "GetTransactionInfosAsync", $"GetTransactionInfosAsync is invoked.");
                 foreach (DBRequestDetails dbRequestDetails in DBRequestDetails!)
                 {
-                    msg = dbRequestDetails.UETR!;
-                    cdtTrfTxInfs.Add(GetSingleTxInfsAsync(dbRequestDetails, _serviceParams.Value.RmtInf!));
+                    try
+                    {
+                        msg = dbRequestDetails.UETR!;
+                        cdtTrfTxInfs.Add(GetSingleTxInfsAsync(dbRequestDetails, _serviceParams.Value.RmtInf!));
+                    }
+                    catch (Exception ex)
+                    {
+                       _logger.Error("MXtoMTConversionWorker", "GetTransactionInfosAsync", $"Error occurred in GetTransactionInfosAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
+                    }
+                  
                 }
+                _logger.Info("MXtoMTConversionWorker", "GetTransactionInfosAsync", $"GetTransactionInfosAsync is done.");
             }
             catch (Exception ex)
             {
-                _logger.Error("MXtoMTConversionWorker", "GetGrpHdrAsync", $"Error occurred in GetGrpHdrAsync(): {ex.Message}");
+                _logger.Error("MXtoMTConversionWorker", "GetGrpHdrAsync", $"Error occurred in GetGrpHdrAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
             }
 
             return cdtTrfTxInfs;
         }
-        private static CdtTrfTxInf GetSingleTxInfsAsync(DBRequestDetails dbRequestDetails, string RmtInf)
+        private  CdtTrfTxInf GetSingleTxInfsAsync(DBRequestDetails dbRequestDetails, string RmtInf)
         {
             CdtTrfTxInf cdtTrfTxInf = new CdtTrfTxInf();
-            cdtTrfTxInf.PmtId = GetPmtId(dbRequestDetails);
-            cdtTrfTxInf.PmtTpInf = GetPmtTpInf(dbRequestDetails);
-            cdtTrfTxInf.IntrBkSttlmAmt = GetIntrBkSttlmAmt(dbRequestDetails);
-            cdtTrfTxInf.IntrBkSttlmDt = dbRequestDetails.AccptanceDateTime;
-            cdtTrfTxInf.ChrgBr = "CRED";//dbRequestDetails.Charge_Bearer;
-            cdtTrfTxInf.InstgAgt = GetInstgAgt(dbRequestDetails);
-            cdtTrfTxInf.InstdAgt = GetInstdAgt(dbRequestDetails);
-            cdtTrfTxInf.Dbtr = GetDbtr(dbRequestDetails);
-            cdtTrfTxInf.DbtrAcct = GetDbtrAcct(dbRequestDetails);
-            cdtTrfTxInf.DbtrAgt = GetDbtrAgt(dbRequestDetails);
-            cdtTrfTxInf.CdtrAgt = GetCdtrAgt(dbRequestDetails);
-            cdtTrfTxInf.Cdtr = GetCdtr(dbRequestDetails);
-            cdtTrfTxInf.CdtrAcct = GetCdtrAcct(dbRequestDetails);
-            cdtTrfTxInf.Purp = GetPurp(dbRequestDetails);
-            cdtTrfTxInf.RmtInf = GetRmtInf(dbRequestDetails, RmtInf);
+            try
+            {
+                _logger.Info("MXtoMTConversionWorker", "GetSingleTxInfsAsync", $"GetSingleTxInfsAsync is invoked.");
+                cdtTrfTxInf.PmtId = GetPmtId(dbRequestDetails);
+                cdtTrfTxInf.PmtTpInf = GetPmtTpInf(dbRequestDetails);
+                cdtTrfTxInf.IntrBkSttlmAmt = GetIntrBkSttlmAmt(dbRequestDetails);
+                cdtTrfTxInf.IntrBkSttlmDt = dbRequestDetails.AccptanceDateTime;
+                cdtTrfTxInf.ChrgBr = "CRED";//dbRequestDetails.Charge_Bearer;
+                cdtTrfTxInf.InstgAgt = GetInstgAgt(dbRequestDetails);
+                cdtTrfTxInf.InstdAgt = GetInstdAgt(dbRequestDetails);
+                cdtTrfTxInf.Dbtr = GetDbtr(dbRequestDetails);
+                cdtTrfTxInf.DbtrAcct = GetDbtrAcct(dbRequestDetails);
+                cdtTrfTxInf.DbtrAgt = GetDbtrAgt(dbRequestDetails);
+                cdtTrfTxInf.CdtrAgt = GetCdtrAgt(dbRequestDetails);
+                cdtTrfTxInf.Cdtr = GetCdtr(dbRequestDetails);
+                cdtTrfTxInf.CdtrAcct = GetCdtrAcct(dbRequestDetails);
+                cdtTrfTxInf.Purp = GetPurp(dbRequestDetails);
+                cdtTrfTxInf.RmtInf = GetRmtInf(dbRequestDetails, RmtInf);
+               _logger.Info("MXtoMTConversionWorker", "GetSingleTxInfsAsync", $"GetSingleTxInfsAsync is done.");
+            }
+            
+            catch (Exception ex)
+            {
+                _logger.Error("MXtoMTConversionWorker", "GetGrpHdrAsync", $"Error occurred in GetGrpHdrAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
+            }
             return cdtTrfTxInf;
-
         }
 
         private static Dbtr GetDbtr(DBRequestDetails dbRequestDetails)
@@ -649,7 +668,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("MXtoMTConversionWorker", "ConvertCtdToPacs008DataPDU", $"Error occurred in ConvertCtdToPacs008DataPDU(): {ex.Message}");
+                    _logger.Error("MXtoMTConversionWorker", "ConvertCtdToPacs008DataPDU", $"Error occurred in ConvertCtdToPacs008DataPDU():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                 }
             });
             _logger.Info("MXtoMTConversionWorker", "ConvertCtdToPacs008DataPDU", $"ConvertCtdToPacs008DataPDU is done.");

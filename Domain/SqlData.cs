@@ -35,13 +35,13 @@ namespace Raqmiyat.Framework.Domain
                     }
                     catch(Exception ex)
                     {
-                       _logger.Error(ex,"SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync(): {ex.Message}");
+                       _logger.Error(ex,"SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex,"SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync(): {ex.Message}");
+                _logger.Error(ex,"SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
             }
             _logger.Info("SqlData", "GetDataFromDatabaseAsync", $"GetDataFromDatabaseAsync is done.");
             return dbBatchPaymentParams;
@@ -64,9 +64,10 @@ namespace Raqmiyat.Framework.Domain
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex, "SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync(): {ex.Message}");
+                        _logger.Error(ex, "SqlData", "GetDataFromDatabaseAsync", $"Error occurred in GetDataFromDatabaseAsync(): {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                     }
                 }
+               
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@ namespace Raqmiyat.Framework.Domain
             }
             catch (Exception ex)
             {
-                _logger.Error(ex,"SqlData", "UpdateBatchPaymentDetailsAsync", $"Error occurred in UpdateBatchPaymentDetailsAsync(): {ex.Message}");
+                _logger.Error(ex,"SqlData", "UpdateBatchPaymentDetailsAsync", $"Error occurred in UpdateBatchPaymentDetailsAsync():  {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
             }
             _logger.Info("SqlData", "UpdateBatchPaymentDetailsAsync", $"UpdateBatchPaymentDetailsAsync Done.");
         }
@@ -135,7 +136,7 @@ namespace Raqmiyat.Framework.Domain
             }
             catch (Exception ex)
             {
-                _logger.Error(ex,"SqlData", "UpdateValidationStatusAsync", $"Error occurred in UpdateValidationStatusAsync(): {ex.Message}");
+                _logger.Error(ex,"SqlData", "UpdateValidationStatusAsync", $"Error occurred in UpdateValidationStatusAsync(): {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
             }
             _logger.Info("SqlData", "UpdateValidationStatusAsync", $"UpdateValidationStatusAsync Done.");
         }

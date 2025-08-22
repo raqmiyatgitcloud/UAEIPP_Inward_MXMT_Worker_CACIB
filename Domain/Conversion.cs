@@ -29,7 +29,7 @@ namespace Raqmiyat.Framework.Domain
 
                     _logger.Info("Conversion", "TransformMXToMTAsync", $"Started.");
                     // Construct MT103 header
-                    sb.Append("{1:F01").Append(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.Debtor_Institution_Identification).Append("XXXX0000000000}{2:I103").Append(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.Debtor_Institution_Identification).Append("AXXX").Append("0803").Append("XXXX0000000000").Append("N}").Append("{3:{108:000000").Append(interbankSettlementdate).Append("}{121:00000000-0000-4083-8870-").Append(interbankSettlementdate).Append("070323}}").Append("{4:\n");
+                    sb.Append("{1:F01").Append(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.Debtor_Institution_Identification).Append("XXXX0000000000}{2:I103").Append(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.Creditor_Institution_Identification).Append("AXXX").Append("0803").Append("XXXX0000000000").Append("N}").Append("{3:{108:000000").Append(interbankSettlementdate).Append("}{121:").Append(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.UETR).Append("}}").Append("{4:\n");
                     // Construct sender details
                     if (!string.IsNullOrEmpty(dBBatchPaymentParams!.DBRequestDetails!.FirstOrDefault()!.EndToEnd_Identification))
                     {
@@ -87,7 +87,7 @@ namespace Raqmiyat.Framework.Domain
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("Conversion", "TransformMXToMTAsync", ex.Message);
+                    _logger.Error("Conversion", "TransformMXToMTAsync", $"Exception: {ex.Message},StackTrace: {ex.StackTrace}, InnerException: {(ex.InnerException != null ? ex.InnerException.Message : "None")}");
                 }
                 _logger.Info("Conversion", "TransformMXToMTAsync", $"Completed.");
             });
