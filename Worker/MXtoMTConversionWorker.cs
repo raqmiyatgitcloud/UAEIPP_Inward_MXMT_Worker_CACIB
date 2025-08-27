@@ -254,7 +254,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                             {
                                 FinInstnId = new FinInstnId
                                 {
-                                    BICFI = DBParamsRoot!.DBRequestDetails!.FirstOrDefault()!.Creditor_Institution_Identification
+                                    BICFI = DBParamsRoot!.DBRequestDetails!.FirstOrDefault()!.Debtor_Institution_Identification
                                 }
                             }
                         };
@@ -265,7 +265,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                             {
                                 FinInstnId = new FinInstnId
                                 {
-                                    BICFI = DBParamsRoot!.DBRequestDetails!.FirstOrDefault()!.Debtor_Institution_Identification
+                                    BICFI = DBParamsRoot!.DBRequestDetails!.FirstOrDefault()!.Creditor_Institution_Identification
                                 }
                             }
                         };
@@ -533,7 +533,7 @@ namespace UAEIPP_Inward_MXMT_Worker
         {
             InstdAgt InstdAgt = new InstdAgt();
             FinInstnId finInstnId1 = new FinInstnId();
-            finInstnId1.BICFI = dbRequestDetails.Debtor_Institution_Identification;
+            finInstnId1.BICFI = dbRequestDetails.Creditor_Institution_Identification;
             InstdAgt.FinInstnId = finInstnId1;
             return InstdAgt;
         }
@@ -541,7 +541,7 @@ namespace UAEIPP_Inward_MXMT_Worker
         {
             InstgAgt InstgAgt = new InstgAgt();
             FinInstnId finInstnId1 = new FinInstnId();
-            finInstnId1.BICFI = dbRequestDetails.Creditor_Institution_Identification;
+            finInstnId1.BICFI = dbRequestDetails.Debtor_Institution_Identification;
             InstgAgt.FinInstnId = finInstnId1;
             return InstgAgt;
         }
