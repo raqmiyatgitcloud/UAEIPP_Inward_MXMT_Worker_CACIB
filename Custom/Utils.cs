@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Raqmiyat.Framework.Custom
@@ -72,6 +71,50 @@ namespace Raqmiyat.Framework.Custom
                         xmlWriter!.Close();
                     }
                     result = sb.ToString();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Pacs003XmlWorker", "SerializeToXML", ex.Message);
+                }
+            });
+
+            return result;
+        }
+        public async Task<string> SerializeToDataPDUXML<T>(T objectToSerialize, Logger _logger)
+        {
+            string result = string.Empty;
+            await Task.Run(() =>
+            {
+                try
+                {
+                    XmlWriterSettings settings = new XmlWriterSettings
+                    {
+                        Indent = true,
+                        Encoding = new UTF8Encoding(false), // UTF-8 without BOM
+                        OmitXmlDeclaration = false
+                    };
+
+                    T cleanedModel = RemoveNullOrEmptyProperties(objectToSerialize, _logger);
+
+                    using (var ms = new MemoryStream())
+                    using (XmlWriter xmlWriter = XmlWriter.Create(ms, settings))
+                    {
+                        if (xmlWriter != null)
+                        {
+                            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                            ns.Add("Saa", "urn:swift:saa:xsd:saa.2.0");
+                            ns.Add("Sw", "urn:swift:snl:ns.Sw");
+                            ns.Add("SwSec", "urn:swift:snl:ns.SwSec");
+                            ns.Add("SwInt", "urn:swift:snl:ns.SwInt");
+                            ns.Add("SwGbl", "urn:swift:snl:ns.SwGbl");
+
+                            new XmlSerializer(typeof(T)).Serialize(xmlWriter, objectToSerialize, ns);
+                        }
+                        xmlWriter!.Close();
+
+                        // Convert MemoryStream (UTF-8 bytes) to string
+                        result = Encoding.UTF8.GetString(ms.ToArray());
+                    }
                 }
                 catch (Exception ex)
                 {

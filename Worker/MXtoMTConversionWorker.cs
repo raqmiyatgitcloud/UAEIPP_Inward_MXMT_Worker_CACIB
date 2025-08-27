@@ -104,7 +104,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                                                 if (_serviceParams.Value.IsDataPDU)
                                                 {
                                                     var DataPDUObject = await ConvertCtdToPacs008DataPDU(body);
-                                                    finalXml = await _utils.SerializeToXML(DataPDUObject, _logger._log);
+                                                    finalXml = await _utils.SerializeToDataPDUXML(DataPDUObject, _logger._log);
                                                 }
                                                 else
                                                 {
@@ -396,7 +396,7 @@ namespace UAEIPP_Inward_MXMT_Worker
             {
                 _logger.Info("MXtoMTConversionWorker", "GetSingleTxInfsAsync", $"GetSingleTxInfsAsync is invoked.");
                 cdtTrfTxInf.PmtId = GetPmtId(dbRequestDetails);
-                cdtTrfTxInf.PmtTpInf = GetPmtTpInf(dbRequestDetails);
+                //cdtTrfTxInf.PmtTpInf = GetPmtTpInf(dbRequestDetails);
                 cdtTrfTxInf.IntrBkSttlmAmt = GetIntrBkSttlmAmt(dbRequestDetails);
                 cdtTrfTxInf.IntrBkSttlmDt = dbRequestDetails.AccptanceDateTime;
                 cdtTrfTxInf.ChrgBr = "CRED";//dbRequestDetails.Charge_Bearer;
@@ -432,7 +432,7 @@ namespace UAEIPP_Inward_MXMT_Worker
         private static Purp GetPurp(DBRequestDetails dbRequestDetails)
         {
             Purp purp = new Purp();
-            purp.Cd = dbRequestDetails.Purpose_Of_Payment;
+            purp.Cd = dbRequestDetails.Category_Purpose_Code;
             return purp;
         }
         private static RmtInf GetRmtInf(DBRequestDetails dbRequestDetails, string RmtInf)
@@ -597,14 +597,14 @@ namespace UAEIPP_Inward_MXMT_Worker
             return intrBkSttlmAmt;
         }
 
-        private static PmtTpInf GetPmtTpInf(DBRequestDetails dbRequestDetails)
-        {
-            PmtTpInf pmtTpInf = new PmtTpInf();
-            CtgyPurp ctgyPurp = new CtgyPurp();
-            ctgyPurp.Prtry = dbRequestDetails.Category_Purpose_Code;
-            pmtTpInf.CtgyPurp = ctgyPurp;
-            return pmtTpInf;
-        }
+        //private static PmtTpInf GetPmtTpInf(DBRequestDetails dbRequestDetails)
+        //{
+        //    PmtTpInf pmtTpInf = new PmtTpInf();
+        //    CtgyPurp ctgyPurp = new CtgyPurp();
+        //    ctgyPurp.Prtry = dbRequestDetails.Category_Purpose_Code;
+        //    pmtTpInf.CtgyPurp = ctgyPurp;
+        //    return pmtTpInf;
+        //}
 
         private static PmtId GetPmtId(DBRequestDetails dbRequestDetails)
         {

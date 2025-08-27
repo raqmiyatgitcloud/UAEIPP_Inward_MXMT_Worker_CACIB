@@ -119,13 +119,7 @@ namespace Pacs008.Request.Model
         public string? Prtry { get; set; }
     }
 
-    [XmlRoot(ElementName = "CtgyPurp")]
-    public class CtgyPurp
-    {
-
-        [XmlElement(ElementName = "Prtry")]
-        public string? Prtry { get; set; }
-    }
+    
 
     [XmlRoot(ElementName = "PmtTpInf")]
     public class PmtTpInf
@@ -134,8 +128,8 @@ namespace Pacs008.Request.Model
         [XmlElement(ElementName = "LclInstrm")]
         public LclInstrm? LclInstrm { get; set; }
 
-        [XmlElement(ElementName = "CtgyPurp")]
-        public CtgyPurp? CtgyPurp { get; set; }
+        //[XmlElement(ElementName = "CtgyPurp")]
+        //public CtgyPurp? CtgyPurp { get; set; }
     }
 
     [XmlRoot(ElementName = "IntrBkSttlmAmt")]
