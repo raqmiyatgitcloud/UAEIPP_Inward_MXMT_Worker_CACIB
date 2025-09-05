@@ -610,7 +610,7 @@ namespace UAEIPP_Inward_MXMT_Worker
         private static PmtId GetPmtId(DBRequestDetails dbRequestDetails)
         {
             PmtId pmtId = new PmtId();
-            pmtId.InstrId = dbRequestDetails.EndToEnd_Identification;
+            pmtId.InstrId = dbRequestDetails.Instruction_Identification;
             pmtId.EndToEndId = dbRequestDetails.EndToEnd_Identification;
             pmtId.TxId = dbRequestDetails.Transaction_Identification;
             pmtId.UETR = dbRequestDetails.UETR;
