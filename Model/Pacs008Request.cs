@@ -347,8 +347,8 @@ namespace Pacs008.Request.Model
     public class Purp
     {
 
-        [XmlElement(ElementName = "Cd")]
-        public string? Cd { get; set; }
+        [XmlElement(ElementName = "Prtry")]
+        public string? Prtry { get; set; }
     }
     [XmlRoot(ElementName = "RmtInf")]
     public class RmtInf

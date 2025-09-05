@@ -172,7 +172,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                     var document = new Document();
                     var fIToFICstmrCdtTrf = new FIToFICstmrCdtTrf();
                     var grpHdrTask = await GetGrpHdrAsync(dbParamsRoot.DBRequestHeader!, dbParamsRoot.DBRequestDetails);
-                    var cdtTrfTxInfTask = GetTransactionInfosAsync(dbParamsRoot.DBRequestDetails!);
+                    var cdtTrfTxInfTask = GetTransactionInfosAsync(dbParamsRoot.DBRequestDetails!, dbParamsRoot.DBRequestHeader!);
                     fIToFICstmrCdtTrf.GrpHdr = grpHdrTask;
                     fIToFICstmrCdtTrf.CdtTrfTxInf = cdtTrfTxInfTask;
                     document.FIToFICstmrCdtTrf = fIToFICstmrCdtTrf;
@@ -339,7 +339,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                             {
                                 FinInstnId = new FinInstnId
                                 {
-                                    BICFI = dBRequestHeader!.Instructed_Agent_FI_ID
+                                    BICFI = dBRequestHeader!.Instructing_Agent_FI_ID
                                 }
                             },
                         };
@@ -360,10 +360,11 @@ namespace UAEIPP_Inward_MXMT_Worker
             });
             return grpHdr;
         }
-        private List<CdtTrfTxInf> GetTransactionInfosAsync(List<DBRequestDetails> DBRequestDetails)
+        private List<CdtTrfTxInf> GetTransactionInfosAsync(List<DBRequestDetails> DBRequestDetails,DBRequestHeader dBRequestHeader)
         {
             var cdtTrfTxInfs = new List<CdtTrfTxInf>();
             string msg = string.Empty;
+            string interbanksettlementdate = dBRequestHeader.Interbank_Settlement_Date!;
             try
             {
                 _logger.Info("MXtoMTConversionWorker", "GetTransactionInfosAsync", $"GetTransactionInfosAsync is invoked.");
@@ -372,7 +373,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                     try
                     {
                         msg = dbRequestDetails.UETR!;
-                        cdtTrfTxInfs.Add(GetSingleTxInfsAsync(dbRequestDetails, _serviceParams.Value.RmtInf!));
+                        cdtTrfTxInfs.Add(GetSingleTxInfsAsync(dbRequestDetails, _serviceParams.Value.RmtInf!,interbanksettlementdate));
                     }
                     catch (Exception ex)
                     {
@@ -389,7 +390,7 @@ namespace UAEIPP_Inward_MXMT_Worker
 
             return cdtTrfTxInfs;
         }
-        private  CdtTrfTxInf GetSingleTxInfsAsync(DBRequestDetails dbRequestDetails, string RmtInf)
+        private  CdtTrfTxInf GetSingleTxInfsAsync(DBRequestDetails dbRequestDetails, string RmtInf,string interbanksettlementdate)
         {
             CdtTrfTxInf cdtTrfTxInf = new CdtTrfTxInf();
             try
@@ -398,7 +399,7 @@ namespace UAEIPP_Inward_MXMT_Worker
                 cdtTrfTxInf.PmtId = GetPmtId(dbRequestDetails);
                 //cdtTrfTxInf.PmtTpInf = GetPmtTpInf(dbRequestDetails);
                 cdtTrfTxInf.IntrBkSttlmAmt = GetIntrBkSttlmAmt(dbRequestDetails);
-                cdtTrfTxInf.IntrBkSttlmDt = dbRequestDetails.AccptanceDateTime;
+                cdtTrfTxInf.IntrBkSttlmDt = interbanksettlementdate;
                 cdtTrfTxInf.ChrgBr = "CRED";//dbRequestDetails.Charge_Bearer;
                 cdtTrfTxInf.InstgAgt = GetInstgAgt(dbRequestDetails);
                 cdtTrfTxInf.InstdAgt = GetInstdAgt(dbRequestDetails);
@@ -432,7 +433,7 @@ namespace UAEIPP_Inward_MXMT_Worker
         private static Purp GetPurp(DBRequestDetails dbRequestDetails)
         {
             Purp purp = new Purp();
-            purp.Cd = dbRequestDetails.Category_Purpose_Code;
+            purp.Prtry = dbRequestDetails.Category_Purpose_Code;
             return purp;
         }
         private static RmtInf GetRmtInf(DBRequestDetails dbRequestDetails, string RmtInf)
